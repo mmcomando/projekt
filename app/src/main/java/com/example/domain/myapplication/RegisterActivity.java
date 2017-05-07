@@ -14,7 +14,7 @@ import java.io.FileOutputStream;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    Button b1;
+    Button b1,b2;
     EditText ed1, ed2, ed3, ed4;
 
 
@@ -70,6 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         b1 = (Button) findViewById(R.id.button);
+        b2 = (Button) findViewById(R.id.button2);
         ed1 = (EditText) findViewById(R.id.editText);
         ed2 = (EditText) findViewById(R.id.editText2);
         ed3 = (EditText) findViewById(R.id.editText3);
@@ -99,5 +100,16 @@ public class RegisterActivity extends AppCompatActivity {
 
             }
         });
+
+        b2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            finish();
+
+            }
+        });
+
+
+
     }
 }

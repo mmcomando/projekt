@@ -18,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,54 +29,44 @@ public class LoginActivity extends AppCompatActivity {
 
     TextView tx1;
 
-private boolean validate_login(String user, String pass)
-{
-    String result ="";
-    ArrayList<String> logins = new ArrayList<String>();
-    ArrayList<String> passes = new ArrayList<String>();
-    File file = new File(getApplicationContext().getFilesDir(), "passes.txt");
-    FileInputStream inputStream;
+    private boolean validate_login(String login, String pass) {
+        String result = "";
+        HashMap<String, String> credentials = new HashMap<String, String>();
+        FileInputStream inputStream;
 
-    try {
-        inputStream = openFileInput("passes.txt");
-        BufferedReader myReader = new BufferedReader(new InputStreamReader(inputStream));
-        String aDataRow = "";
-        while ((aDataRow = myReader.readLine()) != null) {
-            result = aDataRow;
+        try {
+            inputStream = openFileInput("passes.txt");
+            BufferedReader myReader = new BufferedReader(new InputStreamReader(inputStream));
+            String aDataRow = "";
+            while ((aDataRow = myReader.readLine()) != null) {
+                result = aDataRow;
 
-            Matcher m = Pattern.compile("(.+)#(.+)").matcher(result);
-            if(m.find())
-            {
-                logins.add(m.group(1));
-                passes.add(m.group(2));
+                Matcher m = Pattern.compile("(.+)#(.+)").matcher(result);
+                if (m.find()) {
+                    credentials.put(m.group(1), m.group(2));
+
+                }
 
             }
-
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        myReader.close();
-    } catch (FileNotFoundException e) {
-        e.printStackTrace();
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
 
-   for ( int i =0;i<logins.size();i++)
-   {
-       if(logins.get(i).equals(user)&& passes.get(i).equals(pass)){
-           Toast.makeText(getApplicationContext(),"Access granted", Toast.LENGTH_SHORT).show();
-           return true;
-       }
-   }
-
-
+        if (credentials.get(login) != null) {
+            if (credentials.get(login).equals(pass)) {
+                Toast.makeText(getApplicationContext(), "Access granted", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        }
 
 
 
     return false;
 
 }
-
-
 
 
     @Override
@@ -95,7 +86,7 @@ private boolean validate_login(String user, String pass)
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (validate_login(ed1.getText().toString(),ed2.getText().toString())) {
+                if (validate_login(ed1.getText().toString(), ed2.getText().toString())) {
                     Toast.makeText(getApplicationContext(),
                             "Redirecting...", Toast.LENGTH_SHORT).show();
                 } else {
@@ -110,8 +101,6 @@ private boolean validate_login(String user, String pass)
             public void onClick(View v) {
                 Intent goToNextActivity = new Intent(getApplicationContext(), RegisterActivity.class);
                 startActivity(goToNextActivity);
-
-
 
 
             }
