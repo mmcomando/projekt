@@ -1,5 +1,7 @@
 package com.example.domain.myapplication;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by pacman on 5/10/2017.
  */
@@ -13,4 +15,5 @@ public class Config {
     //0 means no object
     public static  int tripID=0;
     public static  int tripElementID=0;
+    public static Bitmap imageToDisplay;
 }

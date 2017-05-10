@@ -12,6 +12,7 @@ public class MainActivity extends AppCompatActivity {
         //setContentView(R.layout.activity_main);
        // Intent goToNextActivity = new Intent(getApplicationContext(), LoginActivity.class);
         Intent goToNextActivity = new Intent(getApplicationContext(), MapsActivity.class);
+       // Intent goToNextActivity = new Intent(getApplicationContext(), DisplayImageActivity.class);
         startActivity(goToNextActivity);
     }
 }

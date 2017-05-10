@@ -1,12 +1,15 @@
 package com.example.domain.myapplication;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -64,13 +67,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMapClickListener(this);
 
         marker_mapelements=new ArrayList<Marker_MapElement>();
-        ArrayList<MapElement> mapElements =  this.getMapElements();
         PolylineOptions rectOptions = new PolylineOptions();
         polyline = mMap.addPolyline(rectOptions);
 
-        if(mapElements.size()==0){
-            return;
+        this.refreshFromWeb();
+    }
+
+    public void refreshFromWeb(){
+        for (Marker_MapElement m_el: marker_mapelements) {
+            m_el.marker.remove();
         }
+        marker_mapelements.clear();
+
+
+        ArrayList<MapElement> mapElements =  this.getMapElements();
+
         double latitude=0;
         double longitude=0;
         for (MapElement el: mapElements) {
@@ -82,12 +93,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             marker_mapelements.add(new Marker_MapElement(mmm, el));
         }
-        latitude/=mapElements.size();
-        longitude/=mapElements.size();
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(latitude, longitude)));
+
+        if(mapElements.size()!=0){
+            latitude/=mapElements.size();
+            longitude/=mapElements.size();
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(latitude, longitude)));
+        }
+       ;
         updatePolyline();
     }
-
     public void updatePolyline(){
         polyline.remove();
         PolylineOptions rectOptions = new PolylineOptions();
@@ -110,7 +124,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         try {
             URL url = new URL(Config.ICON_URL);//+String.valueOf(el.iconID)
             Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            Bitmap bmpSized=Bitmap.createScaledBitmap(bmp, 30, 30, false);
+            Bitmap bmpSized=Bitmap.createScaledBitmap(bmp, 60, 60, false);
             mOptions.icon(BitmapDescriptorFactory.fromBitmap(bmpSized));
 
         } catch (Exception e) {
@@ -152,11 +166,50 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 break;
             }
         }
+        Log.d("aaaaaaaaaa","kkkkk");
         if(el==null){
             return true;
         }
+        Log.d("aaaaaaaaaa","aaaaaaaaaaa");
+        try {
+
+
+            Log.d("aaaaaaaaaa","aaaaaaaaaaa111111111");
+            URL url = new URL(Config.ICON_URL);//+String.valueOf(el.iconID)
+            Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+
+            //zoomImageFromThumb(thumb1View, bmp);
+            Log.d("aaaaaaaaaa","aaaaaaaaaaa2222222222");
+            Config.imageToDisplay=bmp;
+            Intent goToNextActivity = new Intent(getApplicationContext(), DisplayImageActivity.class);
+            startActivity(goToNextActivity);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
         return true;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /****************************************************
      ***************   Helper Classes *******************
