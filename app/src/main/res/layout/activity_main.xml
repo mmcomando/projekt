@@ -10,6 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.domain.myapplication.MainActivity">
 
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,5 +26,25 @@
         android:layout_toRightOf="@+id/textView"
         android:onClick="addMediaOnClick"
         android:text="Add media" />
+    <Button
+        android:id="@+id/button_mapy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="mapsOnClick"
+        android:text="Mapy"
+        android:layout_below="@+id/button_addmedia"
+        android:layout_alignLeft="@+id/button_addmedia"
+        android:layout_alignStart="@+id/button_addmedia" />
+
+    <Button
+        android:id="@+id/button_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="loginOnClick"
+        android:text="Login"
+        android:layout_below="@+id/button_mapy"
+        android:layout_alignLeft="@+id/button_mapy"
+        android:layout_alignStart="@+id/button_mapy" />
+
 
 </RelativeLayout>

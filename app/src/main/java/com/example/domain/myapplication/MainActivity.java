@@ -19,4 +19,14 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("pointId", (String)null);
         startActivity(intent);
     }
+
+    public void mapsOnClick(View view) {
+        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+        intent.putExtra("tripId", (String)null);
+        startActivity(intent);
+    }
+    public void loginOnClick(View view) {
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        startActivity(intent);
+    }
 }
