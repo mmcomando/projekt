@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.JsonReader;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,11 +17,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -30,7 +36,9 @@ public class LoginActivity extends AppCompatActivity {
     TextView tx1;
 
     private boolean validate_login(String login, String pass) {
-        String result = "";
+
+        // stara funkcja do walidacji
+       /* String result = "";
         HashMap<String, String> credentials = new HashMap<String, String>();
         FileInputStream inputStream;
 
@@ -60,13 +68,64 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Access granted", Toast.LENGTH_SHORT).show();
                 return true;
             }
-        }
+        }*/
 
 
 
-    return false;
+    return true;
 
 }
+
+    private String sendLoginRequest() {
+        try {
+            // Create URL
+            URL LogowanieAPI = null;
+            try {
+                LogowanieAPI = new URL("/trip/loging");
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+
+            // Create connection
+            HttpsURLConnection LoginConnection = null;
+
+            LoginConnection = (HttpsURLConnection) LogowanieAPI.openConnection();
+
+            LoginConnection.setRequestMethod("POST");
+            LoginConnection.setRequestProperty("user_login", ed1.getText().toString());
+            LoginConnection.setRequestProperty("password", ed2.getText().toString());
+
+            LoginConnection.setConnectTimeout(1000);
+
+            if (LoginConnection.getResponseCode() == 200) {
+                InputStream responseBody = LoginConnection.getInputStream();
+                InputStreamReader responseBodyReader = new InputStreamReader(responseBody, "UTF-8");
+                JsonReader jsonReader = new JsonReader(responseBodyReader);
+                LoginConnection.disconnect();
+                jsonReader.beginObject(); // Start processing the JSON object
+                while (jsonReader.hasNext()) { // Loop through all keys
+                    String key = jsonReader.nextName(); // Fetch the next key
+
+                    if (key.equals("result")) { // Check if desired key
+                        // Fetch the value as a String
+                        String value = jsonReader.nextString();
+                        if (value.equals("success"))return "success";
+                        break; // Break out of the loop
+                    } else {
+                        jsonReader.skipValue(); // Skip values of other keys
+                    }
+                }
+
+            } else {
+                return "fail";
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "fail";
+    }
 
 
     @Override
@@ -87,8 +146,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (validate_login(ed1.getText().toString(), ed2.getText().toString())) {
-                    Toast.makeText(getApplicationContext(),
-                            "Redirecting...", Toast.LENGTH_SHORT).show();
+                    String result = sendLoginRequest();
+                    Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                    if(result.equals("success"))
+                    {
+                        Intent goToNextActivity = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(goToNextActivity);
+                    }
                 } else {
                     Toast.makeText(getApplicationContext(), "Niepoprawne hasło lub nazwa użytkownika", Toast.LENGTH_SHORT).show();
 
