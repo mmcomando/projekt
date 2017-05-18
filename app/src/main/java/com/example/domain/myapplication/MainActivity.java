@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void mapsOnClick(View view) {
-        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+        Intent intent = new Intent(getApplicationContext(), TripsListActivity.class);
         intent.putExtra("tripId", (String)null);
         startActivity(intent);
     }
