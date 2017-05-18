@@ -1,5 +1,6 @@
 package com.example.domain.myapplication;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -50,8 +51,7 @@ public class PointsListActivity extends AppCompatActivity {
                 ListElement el=list.get(position);
                 Log.w("wwwww",el.title);
                 Log.w("w",String.valueOf(el.pointId));
-                //Intent intent = new Intent(Activity.this,destinationActivity.class);
-                //startActivity(intent);
+                MainActivity.startAddMediaActivity(PointsListActivity.this, tripId, String.valueOf(el.pointId));
             }
         });
 
@@ -61,12 +61,16 @@ public class PointsListActivity extends AppCompatActivity {
     public ArrayList<ListElement> getListElements() {
         ArrayList<ListElement> list= new ArrayList<ListElement>();
         list.add(new ListElement(1,"Punkt 1"));
-        list.add(new ListElement(1,"Punkt 2"));
-        list.add(new ListElement(1,"Punkt 3"));
+        list.add(new ListElement(2,"Punkt 2"));
+        list.add(new ListElement(5,"Punkt 3"));
         list.add(new ListElement(1,"Punkt 4"));
         return list;
     }
-
+    public void mapsOnClick(View view) {
+        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+        intent.putExtra("tripId", (String)null);
+        startActivity(intent);
+    }
 
     /****************************************************
      ***************   Helper Classes *******************

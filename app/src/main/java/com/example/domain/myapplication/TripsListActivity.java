@@ -64,9 +64,9 @@ public class TripsListActivity extends AppCompatActivity {
     public ArrayList<ListElement> getListElements() {
         ArrayList<ListElement> list= new ArrayList<ListElement>();
         list.add(new ListElement(1,"Wycieczka Warszawa"));
-        list.add(new ListElement(1,"Wycieczka Kraków"));
-        list.add(new ListElement(1,"Poznan"));
-        list.add(new ListElement(1,"Warszawa"));
+        list.add(new ListElement(2,"Wycieczka Kraków"));
+        list.add(new ListElement(3,"Poznan"));
+        list.add(new ListElement(4,"Warszawa"));
         return list;
     }
 

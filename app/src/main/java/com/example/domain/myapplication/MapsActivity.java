@@ -131,28 +131,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public String downloadDataFromURL(String url){
-        /*URL u;
-        InputStream is = null;
-        DataInputStream dis;
-        String s="ERROR__";
-
-        try {
-            u = new URL(url);
-            is = u.openStream();         // throws an IOException
-            dis = new DataInputStream(new BufferedInputStream(is));
-            while ((s = dis.readLine()) != null) {
-                System.out.println(s);
-            }
-
-        }  catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                is.close();
-            } catch (Exception ioe) {}
-
-        }
-        return s;*/
         String out="EMPTY_";
         try {
             out = new Scanner(new URL("http://www.google.com").openStream(), "UTF-8").useDelimiter("\\A").next();
@@ -219,8 +197,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
 
             Config.imageToDisplay=bmp;
-            Intent goToNextActivity = new Intent(getApplicationContext(), DisplayImageActivity.class);
-            startActivity(goToNextActivity);
+            //Intent goToNextActivity = new Intent(getApplicationContext(), DisplayImageActivity.class);
+            //startActivity(goToNextActivity);
+            MainActivity.startAddMediaActivity(this, tripId, String.valueOf(el.pointId));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -257,6 +236,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String title;
         int iconID;
         Date date;
+        int pointId;
 
         public MapElement(LatLng ppos, String ptitle, int piconID, Date pdate) {
             pos = ppos;
