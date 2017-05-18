@@ -23,14 +23,18 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Scanner;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener {
 
-    private String tripId;
+    private String tripId="1";
     private GoogleMap mMap;
     private Polyline polyline;
     private ArrayList<Marker_MapElement> marker_mapelements;
@@ -41,7 +45,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
-        this.tripId = intent.getStringExtra("tripId");
+        if(intent.hasExtra("tripId")) {
+            this.tripId = intent.getStringExtra("tripId");
+        }
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -75,6 +81,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         polyline = mMap.addPolyline(rectOptions);
 
         this.refreshFromWeb();
+        Log.w("aaaaaaaaaaa",this.downloadDataFromURL("http://alvinalexander.com/java/edu/pj/pj010011"));
     }
 
     public void refreshFromWeb(){
@@ -123,10 +130,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return date;
     }
 
+    public String downloadDataFromURL(String url){
+        /*URL u;
+        InputStream is = null;
+        DataInputStream dis;
+        String s="ERROR__";
+
+        try {
+            u = new URL(url);
+            is = u.openStream();         // throws an IOException
+            dis = new DataInputStream(new BufferedInputStream(is));
+            while ((s = dis.readLine()) != null) {
+                System.out.println(s);
+            }
+
+        }  catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (Exception ioe) {}
+
+        }
+        return s;*/
+        String out="EMPTY_";
+        try {
+            out = new Scanner(new URL("http://www.google.com").openStream(), "UTF-8").useDelimiter("\\A").next();
+        }catch (Exception e) {
+                e.printStackTrace();
+            }
+        return out;
+    }
+
     public MarkerOptions mapElementToMarkerOptions(MapElement el){
         MarkerOptions mOptions=new MarkerOptions().position(el.pos).title(el.title);
         try {
-            URL url = new URL(Config.ICON_URL);//+String.valueOf(el.iconID)
+            URL url = new URL(Config.API_URL+"trip/photos_miniature/"+tripId+"/"+String.valueOf(el.iconID));//+String.valueOf(el.iconID)
             Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
             Bitmap bmpSized=Bitmap.createScaledBitmap(bmp, 60, 60, false);
             mOptions.icon(BitmapDescriptorFactory.fromBitmap(bmpSized));
@@ -170,20 +209,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 break;
             }
         }
-        Log.d("aaaaaaaaaa","kkkkk");
         if(el==null){
             return true;
         }
-        Log.d("aaaaaaaaaa","aaaaaaaaaaa");
         try {
 
 
-            Log.d("aaaaaaaaaa","aaaaaaaaaaa111111111");
             URL url = new URL(Config.ICON_URL);//+String.valueOf(el.iconID)
             Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
 
-            //zoomImageFromThumb(thumb1View, bmp);
-            Log.d("aaaaaaaaaa","aaaaaaaaaaa2222222222");
             Config.imageToDisplay=bmp;
             Intent goToNextActivity = new Intent(getApplicationContext(), DisplayImageActivity.class);
             startActivity(goToNextActivity);
